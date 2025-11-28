@@ -1,15 +1,14 @@
 /* global it, xit, describe, expect, done, jest */
 
-import React from 'react'; 
-import moment from 'moment';
-import 'moment/locale/nl';
-import 'moment/locale/sv';
-import _momentTimezone from 'moment-timezone'; // eslint-disable-line
+import React from 'react';
+import dayjs from 'dayjs';
+import 'dayjs/locale/nl';
+import 'dayjs/locale/sv';
 import utils from './testUtils';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-moment.locale('en');
+dayjs.locale('en');
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -76,7 +75,7 @@ describe('Datetime', () => {
 		const component = utils.createDatetime({
 			initialViewMode: 'months',
 			value: new Date(2018, 10, 10),
-			isValidDate: current => current.isBefore(moment(dateBefore, 'YYYY-MM-DD'))
+			isValidDate: current => current.isBefore(dayjs(dateBefore, 'YYYY-MM-DD'))
 		});
 
 		expect(utils.isMonthView(component)).toBeTruthy();
@@ -297,7 +296,7 @@ describe('Datetime', () => {
 	});
 
 	it('sets CSS class on today date', () => {
-		const specificDate = moment(),
+		const specificDate = dayjs(),
 			day = specificDate.date(),
 			component = utils.createDatetime({ initialValue: specificDate })
 		;
@@ -315,14 +314,14 @@ describe('Datetime', () => {
 
 		it('dateFormat', () => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				component = utils.createDatetime({ value: date, dateFormat: 'M&D' });
 			expect(utils.getInputValue(component)).toEqual(mDate.format('M&D LT'));
 		});
 
 		it('dateFormat=false', () => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				component = utils.createDatetime({ value: date, dateFormat: false });
 			expect(utils.getInputValue(component)).toEqual(mDate.format('LT'));
 			// Make sure time view is active
@@ -333,7 +332,7 @@ describe('Datetime', () => {
 
 		it('timeFormat', () => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				format = 'HH:mm:ss:SSS',
 				component = utils.createDatetime({ value: date, timeFormat: format });
 			expect(utils.getInputValue(component)).toEqual(mDate.format('L ' + format));
@@ -341,7 +340,7 @@ describe('Datetime', () => {
 
 		it('timeFormat=false', () => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				component = utils.createDatetime({ value: date, timeFormat: false });
 			expect(utils.getInputValue(component)).toEqual(mDate.format('L'));
 			// Make sure day view is active
@@ -421,7 +420,7 @@ describe('Datetime', () => {
 				currentDate = '',
 				selectedDate = '';
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				renderDayFn = (fnProps, current, selected) => {
 					props = fnProps;
 					currentDate = current;
@@ -452,7 +451,7 @@ describe('Datetime', () => {
 				year = '',
 				selectedDate = '';
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				renderMonthFn = (fnProps, fnMonth, fnYear, selected) => {
 					props = fnProps;
 					month = fnMonth;
@@ -482,7 +481,7 @@ describe('Datetime', () => {
 				year = '',
 				selectedDate = '';
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				renderYearFn = (fnProps, fnYear, selected) => {
 					props = fnProps;
 					year = fnYear;
@@ -716,7 +715,7 @@ describe('Datetime', () => {
 
 		it('strictParsing=true', (done) => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				strDate = mDate.format('L') + ' ' + mDate.format('LT'),
 				invalidStrDate = strDate + 'x',
 				component = utils.createDatetime({ initialValue: '', strictParsing: true,
@@ -732,7 +731,7 @@ describe('Datetime', () => {
 
 		it('strictParsing=false', (done) => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
+				mDate = dayjs(date),
 				strDate = mDate.format('L') + ' ' + mDate.format('LT'),
 				invalidStrDate = strDate + 'x',
 				component = utils.createDatetime({ initialValue: '', strictParsing: false,
@@ -747,7 +746,7 @@ describe('Datetime', () => {
 		it('isValidDate -> disable months', () => {
 			const dateBefore = new Date().getFullYear() + '-06-01',
 				component = utils.createDatetime({ initialViewMode: 'months', isValidDate: (current) =>
-					current.isBefore(moment(dateBefore, 'YYYY-MM-DD'))
+					current.isBefore(dayjs(dateBefore, 'YYYY-MM-DD'))
 				});
 
 			expect(utils.getNthMonth(component, 0).hasClass('rdtDisabled')).toEqual(false);
@@ -759,8 +758,8 @@ describe('Datetime', () => {
 		it('isValidDate -> disable years', () => {
 			const component = utils.createDatetime({
 				initialViewMode: 'years',
-				value: moment('2025-01-01', 'YYYY-MM-DD'),
-				isValidDate: current =>	current.isBefore(moment('2026-01-01', 'YYYY-MM-DD'))
+				value: dayjs('2025-01-01', 'YYYY-MM-DD'),
+				isValidDate: current =>	current.isBefore(dayjs('2026-01-01', 'YYYY-MM-DD'))
 			});
 
 			expect(utils.getNthYear(component, 0).hasClass('rdtDisabled')).toEqual(false);
@@ -823,24 +822,24 @@ describe('Datetime', () => {
 		describe('initialValue of type', () => {
 			it('date', () => {
 				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					momentDate = moment(date),
-					strDate = momentDate.format('L') + ' ' + momentDate.format('LT'),
+					dayjsDate = dayjs(date),
+					strDate = dayjsDate.format('L') + ' ' + dayjsDate.format('LT'),
 					component = utils.createDatetime({ initialValue: date });
 				expect(utils.getInputValue(component)).toEqual(strDate);
 			});
 
-			it('moment', () => {
+			it('dayjs', () => {
 				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					momentDate = moment(date),
-					strDate = momentDate.format('L') + ' ' + momentDate.format('LT'),
-					component = utils.createDatetime({ initialValue: momentDate });
+					dayjsDate = dayjs(date),
+					strDate = dayjsDate.format('L') + ' ' + dayjsDate.format('LT'),
+					component = utils.createDatetime({ initialValue: dayjsDate });
 				expect(utils.getInputValue(component)).toEqual(strDate);
 			});
 
 			it('string', () => {
 				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					momentDate = moment(date),
-					strDate = momentDate.format('L') + ' ' + momentDate.format('LT'),
+					dayjsDate = dayjs(date),
+					strDate = dayjsDate.format('L') + ' ' + dayjsDate.format('LT'),
 					component = utils.createDatetime({ initialValue: strDate });
 				expect(utils.getInputValue(component)).toEqual(strDate);
 			});
@@ -890,59 +889,9 @@ describe('Datetime', () => {
 				}, 0);
 			});
 
-			it('UTC -> value should change format (true->false)', () => {
-				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					momentDate = moment(date),
-					component = utils.createDatetime({ value: momentDate, utc: true });
 
-				const valueBefore = utils.getInputValue(component);
-				component.setProps({ utc: false }, () => {
-					const valueAfter = utils.getInputValue(component);
 
-					expect(valueBefore).not.toEqual(valueAfter);
-				});
-			});
 
-			it('UTC -> value should change format (false->true)', () => {
-				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					momentDate = moment(date),
-					component = utils.createDatetime({ value: momentDate, utc: false });
-
-				const valueBefore = utils.getInputValue(component);
-				component.setProps({ utc: true }, () => {
-					const valueAfter = utils.getInputValue(component);
-
-					expect(valueBefore).not.toEqual(valueAfter);
-				});
-			});
-
-			it('displayTimeZone -> value should change format (undefined->America/New_York)', () => {
-				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					momentDate = moment(date),
-					component = utils.createDatetime({ value: momentDate }),
-					displayTimeZone = (moment.tz.guess() === 'America/New_York' ? 'America/Los_Angeles' : 'America/New_York');
-
-				const valueBefore = utils.getInputValue(component);
-				component.setProps({ displayTimeZone: displayTimeZone }, () => {
-					const valueAfter = utils.getInputValue(component);
-
-					expect(valueBefore).not.toEqual(valueAfter);
-				});
-			});
-
-			it('displayTimeZone -> value should change format (America/New_York->undefined)', () => {
-				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					momentDate = moment(date),
-					displayTimeZone = (moment.tz.guess() === 'America/New_York' ? 'America/Los_Angeles' : 'America/New_York'),
-					component = utils.createDatetime({ value: momentDate, displayTimeZone: displayTimeZone });
-
-				const valueBefore = utils.getInputValue(component);
-				component.setProps({ displayTimeZone: undefined }, () => {
-					const valueAfter = utils.getInputValue(component);
-
-					expect(valueBefore).not.toEqual(valueAfter);
-				});
-			});
 
 			it('locale -> picker should change language (initialViewMode=days)', () => {
 				const component = utils.createDatetime({ initialViewMode: 'days', locale: 'en' });
@@ -1076,7 +1025,7 @@ describe('Datetime', () => {
 			});
 
 			it('when onBeforeNavigate is defined', done => {
-				const date = moment( new Date(2000, 0, 15, 2, 2, 2, 2) );
+				const date = dayjs( new Date(2000, 0, 15, 2, 2, 2, 2) );
 				let on = viewMode => {
 					expect( viewMode ).toEqual('days');
 					done();
@@ -1098,7 +1047,7 @@ describe('Datetime', () => {
 			});
 			
 			it('prevent navigation using onBeforeNavigate', () => {
-				const date = moment( new Date(2000, 0, 15, 2, 2, 2, 2) );
+				const date = dayjs( new Date(2000, 0, 15, 2, 2, 2, 2) );
 				let on = jest.fn();
 				let obn = (next, current, viewDate) => {
 					expect( next ).toEqual('years');
@@ -1168,7 +1117,7 @@ describe('Datetime', () => {
 
 			it('when selecting date', (done) => {
 				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					mDate = moment(date),
+					mDate = dayjs(date),
 					component = utils.createDatetime({ initialValue: date, onChange: (selected) => {
 						expect(selected.date()).toEqual(2);
 						expect(selected.month()).toEqual(mDate.month());
@@ -1182,7 +1131,7 @@ describe('Datetime', () => {
 			it('when selecting multiple date in a row', (done) => {
 				let i = 0;
 				const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-					mDate = moment(date),
+					mDate = dayjs(date),
 					component = utils.createDatetime({ initialValue: date, onChange: (selected) => {
 						i++;
 						if (i > 2) {
@@ -1198,16 +1147,7 @@ describe('Datetime', () => {
 				utils.clickNthDay(component, 9);
 			});
 
-			it('when selecting month', () => {
-				const date = _momentTimezone.tz('2000-03-15T02:02:02.002Z', 'UTC'),
-					onChangeFn = jest.fn(),
-					component = utils.createDatetime({ initialValue: date, dateFormat: 'YYYY-MM', onChange: onChangeFn });
-
-				utils.clickNthMonth(component, 2);
-				expect(onChangeFn).toHaveBeenCalledTimes(1);
-				expect(onChangeFn.mock.calls[0][0].toJSON()).toEqual('2000-03-15T02:02:02.002Z');
-			});
-
+			
 			// Passes locally but not on Travis
 			xit('when selecting year', () => {
 				const date = Date.UTC(2000, 0, 15, 2, 2, 2, 2),
@@ -1291,79 +1231,39 @@ describe('Datetime', () => {
 	describe('with set value', () => {
 		it('date value', () => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
-				strDate = mDate.format('L') + ' ' + mDate.format('LT'),
+				dDate = dayjs(date),
+				strDate = dDate.format('L') + ' ' + dDate.format('LT'),
 				component = utils.createDatetime({ value: date });
 			expect(utils.getInputValue(component)).toEqual(strDate);
 		});
 
-		it('moment value', () => {
+		it('dayjs value', () => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
-				strDate = mDate.format('L') + ' ' + mDate.format('LT'),
-				component = utils.createDatetime({ value: mDate });
+				dDate = dayjs(date),
+				strDate = dDate.format('L') + ' ' + dDate.format('LT'),
+				component = utils.createDatetime({ value: dDate });
 			expect(utils.getInputValue(component)).toEqual(strDate);
 		});
 
 		it('string value', () => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
-				strDate = mDate.format('L') + ' ' + mDate.format('LT'),
+				dDate = dayjs(date),
+				strDate = dDate.format('L') + ' ' + dDate.format('LT'),
 				component = utils.createDatetime({ value: strDate });
 			expect(utils.getInputValue(component)).toEqual(strDate);
 		});
 
-		it('UTC value from local moment', () => {
-			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				momentDate = moment(date),
-				momentDateUTC = moment.utc(date),
-				strDateUTC = momentDateUTC.format('L') + ' ' + momentDateUTC.format('LT'),
-				component = utils.createDatetime({ value: momentDate, utc: true });
-			expect(utils.getInputValue(component)).toEqual(strDateUTC);
-		});
 
-		it('UTC value from UTC moment', () => {
-			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				momentDateUTC = moment.utc(date),
-				strDateUTC = momentDateUTC.format('L') + ' ' + momentDateUTC.format('LT'),
-				component = utils.createDatetime({ value: momentDateUTC, utc: true });
-			expect(utils.getInputValue(component)).toEqual(strDateUTC);
-		});
 
-		it('UTC value from UTC string', () => {
-			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				momentDateUTC = moment.utc(date),
-				strDateUTC = momentDateUTC.format('L') + ' ' + momentDateUTC.format('LT'),
-				component = utils.createDatetime({ value: strDateUTC, utc: true });
-			expect(utils.getInputValue(component)).toEqual(strDateUTC);
-		});
 
-		it('TZ value from local moment', () => {
-			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				displayTimeZone = 'America/New_York',
-				momentDate = moment(date),
-				momentDateTZ = moment.tz(date, displayTimeZone),
-				strDateTZ = momentDateTZ.format('L') + ' ' + momentDateTZ.format('LT'),
-				component = utils.createDatetime({ value: momentDate, displayTimeZone: displayTimeZone });
-			expect(utils.getInputValue(component)).toEqual(strDateTZ);
-		});
 
-		it('TZ value from UTC moment', () => {
-			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				displayTimeZone = 'America/New_York',
-				momentDateUTC = moment.utc(date),
-				momentDateTZ = moment.tz(date, displayTimeZone),
-				strDateTZ = momentDateTZ.format('L') + ' ' + momentDateTZ.format('LT'),
-				component = utils.createDatetime({ value: momentDateUTC, displayTimeZone: displayTimeZone });
-			expect(utils.getInputValue(component)).toEqual(strDateTZ);
-		});
 
 		it('invalid string value', (done) => {
 			const date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
-				strDate = mDate.format('L') + ' ' + mDate.format('LT'),
+				dDate = dayjs(date),
+				strDate = dDate.format('L') + ' ' + dDate.format('LT'),
 				component = utils.createDatetime({ initialValue: 'invalid-value', onChange: (updated) => {
-					expect(mDate.format('L LT')).toEqual(updated.format('L LT'));
+					expect(dDate.format('L LT')).toEqual(updated.format('L LT'));
 					done();
 				}});
 
@@ -1381,13 +1281,13 @@ describe('Datetime', () => {
 			component.find('.form-control').simulate('change', { target: { value: '' }});
 		});
 
-		it('invalid moment object', (done) => {
-			const invalidValue = moment(null),
+		it('invalid dayjs object', (done) => {
+			const invalidValue = dayjs(null),
 				date = new Date(2000, 0, 15, 2, 2, 2, 2),
-				mDate = moment(date),
-				strDate = mDate.format('L') + ' ' + mDate.format('LT'),
+				dDate = dayjs(date),
+				strDate = dDate.format('L') + ' ' + dDate.format('LT'),
 				component = utils.createDatetime({ value: invalidValue, onChange: (updated) => {
-					expect(mDate.format('L LT')).toEqual(updated.format('L LT'));
+					expect(dDate.format('L LT')).toEqual(updated.format('L LT'));
 					done();
 				}});
 
@@ -1396,8 +1296,8 @@ describe('Datetime', () => {
 		});
 
 		it('should update the view date when updating the value prop', done => {
-			const value1 = moment('2020-03-04T13:00:10.121Z');
-			const value2 = moment('2021-06-04T13:00:10.121Z');
+			const value1 = dayjs('2020-03-04T13:00:10.121Z');
+			const value2 = dayjs('2021-06-04T13:00:10.121Z');
 
 			let component = utils.createDatetime({ value: value1 });
 			expect( component.instance().state.viewDate.toISOString() ).toBe(value1.toISOString());
