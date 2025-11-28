@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
 import DaysView from './views/DaysView';
 import MonthsView from './views/MonthsView';
@@ -16,7 +16,7 @@ const viewModes = {
 
 const TYPES = PropTypes;
 const nofn = function () {};
-const datetype = TYPES.oneOfType([ TYPES.instanceOf(moment), TYPES.instanceOf(Date), TYPES.string ]);
+const datetype = TYPES.oneOfType([ TYPES.instanceOf(dayjs), TYPES.instanceOf(Date), TYPES.string ]);
 
 export default class Datetime extends React.Component {
 	static propTypes = {
@@ -33,8 +33,6 @@ export default class Datetime extends React.Component {
 		onNavigateForward: TYPES.func,
 		updateOnView: TYPES.string,
 		locale: TYPES.string,
-		utc: TYPES.bool,
-		displayTimeZone: TYPES.string,
 		input: TYPES.bool,
 		dateFormat: TYPES.oneOfType([TYPES.string, TYPES.bool]),
 		timeFormat: TYPES.oneOfType([TYPES.string, TYPES.bool]),
@@ -64,7 +62,6 @@ export default class Datetime extends React.Component {
 		onNavigateForward: nofn,
 		dateFormat: true,
 		timeFormat: true,
-		utc: false,
 		className: '',
 		input: true,
 		inputProps: {},
@@ -78,7 +75,7 @@ export default class Datetime extends React.Component {
 	}
 
 	// Make moment accessible through the Datetime class
-	static moment = moment;
+	static moment = dayjs;
 
 	constructor( props ) {
 		super( props );
@@ -137,7 +134,7 @@ export default class Datetime extends React.Component {
 			isValidDate: props.isValidDate,
 			updateDate: this._updateDate,
 			navigate: this._viewNavigate,
-			moment: moment,
+			moment: dayjs,
 			showView: this._showView
 		};
 
@@ -175,8 +172,6 @@ export default class Datetime extends React.Component {
 		let props = this.props;
 		let inputFormat = this.getFormat('datetime');
 		let selectedDate = this.parseDate( props.value || props.initialValue, inputFormat );
-
-		this.checkTZ();
 
 		return {
 			open: !props.input,
@@ -423,26 +418,13 @@ export default class Datetime extends React.Component {
 	localMoment( date, format, props ) {
 		props = props || this.props;
 		let m = null;
+		let strictOptions = props.strictParsing ? { strict: true } : {};
 
-		if (props.utc) {
-			m = moment.utc(date, format, props.strictParsing);
-		} else if (props.displayTimeZone) {
-			m = moment.tz(date, format, props.displayTimeZone);
-		} else {
-			m = moment(date, format, props.strictParsing);
-		}
+		m = dayjs(date, format, strictOptions);
 
 		if ( props.locale )
-			m.locale( props.locale );
+			m = m.locale( props.locale );
 		return m;
-	}
-
-	checkTZ() {
-		const { displayTimeZone } = this.props;
-		if ( displayTimeZone && !this.tzWarning && !moment.tz ) {
-			this.tzWarning = true;
-			log('displayTimeZone prop with value "' + displayTimeZone +  '" is used but moment.js timezone is not loaded.', 'error');
-		}
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -451,7 +433,7 @@ export default class Datetime extends React.Component {
 		let needsUpdate = false;
 		let thisProps = this.props;
 
-		['locale', 'utc', 'displayZone', 'dateFormat', 'timeFormat'].forEach( function(p) {
+		['locale', 'dateFormat', 'timeFormat'].forEach( function(p) {
 			prevProps[p] !== thisProps[p] && (needsUpdate = true);
 		});
 
@@ -462,8 +444,6 @@ export default class Datetime extends React.Component {
 		if ( thisProps.value && thisProps.value !== prevProps.value ) {
 			this.setViewDate( thisProps.value );
 		}
-
-		this.checkTZ();
 	}
 
 	regenerateDates() {
@@ -472,27 +452,15 @@ export default class Datetime extends React.Component {
 		let selectedDate = this.state.selectedDate && this.state.selectedDate.clone();
 
 		if ( props.locale ) {
-			viewDate.locale( props.locale );
-			selectedDate &&	selectedDate.locale( props.locale );
-		}
-		if ( props.utc ) {
-			viewDate.utc();
-			selectedDate &&	selectedDate.utc();
-		}
-		else if ( props.displayTimeZone ) {
-			viewDate.tz( props.displayTimeZone );
-			selectedDate &&	selectedDate.tz( props.displayTimeZone );
-		}
-		else {
-			viewDate.locale();
-			selectedDate &&	selectedDate.locale();
+			viewDate = viewDate.locale( props.locale );
+			selectedDate && (selectedDate = selectedDate.locale( props.locale ));
 		}
 
 		let update = { viewDate: viewDate, selectedDate: selectedDate};
 		if ( selectedDate && selectedDate.isValid() ) {
 			update.inputValue = selectedDate.format( this.getFormat('datetime') );
 		}
-		
+
 		this.setState( update );
 	}
 

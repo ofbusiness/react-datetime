@@ -103,8 +103,8 @@ export default class MonthsView extends React.Component {
 	}
 
 	getMonthText( month ) {
-		const localMoment = this.props.viewDate;
-		const monthStr = localMoment.localeData().monthsShort( localMoment.month( month ) );
+		const date = this.props.viewDate.month( month );
+		const monthStr = date.format('MMM');
 
 		// Because some months are up to 5 characters long, we want to
 		// use a fixed string length for consistency

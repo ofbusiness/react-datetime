@@ -1,4 +1,5 @@
 import React from 'react';
+import dayjs from 'dayjs';
 import ViewNavigation from '../parts/ViewNavigation';
 
 export default class DaysView extends React.Component {
@@ -26,13 +27,12 @@ export default class DaysView extends React.Component {
 
 	renderNavigation() {
 		const date = this.props.viewDate;
-		const locale = date.localeData();
 		return (
 			<ViewNavigation
 				onClickPrev={ () => this.props.navigate( -1, 'months' ) }
 				onClickSwitch={ () => this.props.showView( 'months' ) }
 				onClickNext={ () => this.props.navigate( 1, 'months' ) }
-				switchContent={ locale.months( date ) + ' ' + date.year() }
+				switchContent={ date.format('MMMM YYYY') }
 				switchColSpan={5}
 				switchProps={ { 'data-value': this.props.viewDate.month() } }
 			/>
@@ -40,8 +40,7 @@ export default class DaysView extends React.Component {
 	}
 
 	renderDayHeaders() {
-		const locale = this.props.viewDate.localeData();
-		let dayItems = getDaysOfWeek( locale ).map( (day, index) => (
+		let dayItems = getDaysOfWeek().map( (day, index) => (
 			<th key={ day + index } className="dow">{ day }</th>
 		));
 
@@ -147,12 +146,14 @@ function getRow( rows, day ) {
  * depending on the current locale
  * @return {array} A list with the shortname of the days
  */
-function getDaysOfWeek( locale ) {
-	const first = locale.firstDayOfWeek();
+function getDaysOfWeek() {
+	const localeData = dayjs().$locale();
+	const first = localeData.weekStart || 0;
+	const weekdaysMin = dayjs.weekdaysMin();
 	let dow = [];
 	let i = 0;
 
-	locale._weekdaysMin.forEach(function (day) {
+	weekdaysMin.forEach(function (day) {
 		dow[(7 + (i++) - first) % 7] = day;
 	});
 
