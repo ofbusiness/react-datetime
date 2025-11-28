@@ -278,7 +278,7 @@ export default class Datetime extends React.Component {
 
 	getDateFormat() {
 		let format = this.props.dateFormat;
-		if ( format === true ) return 'L';
+		if ( format === true ) return 'MM/DD/YYYY'; // Day.js equivalent of Moment's L format for en
 		if ( format ) return format;
 		return '';
 	}
@@ -286,7 +286,7 @@ export default class Datetime extends React.Component {
 	getTimeFormat() {
 		let format = this.props.timeFormat;
 		if ( format === true ) {
-			return 'LT';
+			return 'h:mm A'; // Day.js equivalent of Moment's LT format
 		}
 		return format || '';
 	}

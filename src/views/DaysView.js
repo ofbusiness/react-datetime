@@ -52,28 +52,42 @@ export default class DaysView extends React.Component {
 	}
 
 	renderDays() {
-		const date = this.props.viewDate;
-		const startOfMonth = date.clone().startOf('month');
-		const endOfMonth = date.clone().endOf('month');
+		// Ensure we have a valid Day.js object
+		let date = this.props.viewDate;
+		if (!date) {
+			date = dayjs();
+		}
 
-		// We need 42 days in 6 rows
-		// starting in the last week of the previous month
+		// Convert to Day.js if it's not already
+		if (!dayjs.isDayjs(date)) {
+			date = dayjs(date);
+		}
+
+		const startOfMonth = date.startOf('month');
+		const endOfMonth = date.endOf('month');
+
+		// We need 42 days in 6 rows starting from the last week of the previous month
 		let rows = [[], [], [], [], [], []];
 
-		let startDate = date.clone().subtract( 1, 'months');
-		startDate.date( startDate.daysInMonth() ).startOf('week');
+		// Get the first day to show (last week of previous month that contains current month)
+		let startDate = date.subtract( 1, 'months').endOf('month').startOf('week');
+		let endDate = startDate.add( 42, 'd' );
+		let dayIndex = 0;
 
-		let endDate = startDate.clone().add( 42, 'd' );
-		let i = 0;
+		while ( dayIndex < 42 ) {
+			let rowIndex = Math.floor( dayIndex / 7 );
+			let row = rows[rowIndex];
 
-		while ( startDate.isBefore( endDate ) ) {
-			let row = getRow( rows, i++ );
-			row.push( this.renderDay( startDate, startOfMonth, endOfMonth ) );
-			startDate.add( 1, 'd' );
+			if (row) {
+				row.push( this.renderDay( startDate, startOfMonth, endOfMonth ) );
+			}
+
+			startDate = startDate.add( 1, 'd' );
+			dayIndex++;
 		}
 
 		return rows.map( (r, i) => (
-			<tr key={ `${endDate.month()}_${i}` }>{ r }</tr>
+			<tr key={ `days_${i}` }>{ r }</tr>
 		));
 	}
 
@@ -97,7 +111,7 @@ export default class DaysView extends React.Component {
 		if ( selectedDate && date.isSame( selectedDate, 'day' ) ) {
 			className += ' rdtActive';
 		}
-		if ( date.isSame( this.props.moment(), 'day' ) ) {
+		if ( date.isSame( dayjs(), 'day' ) ) {
 			className += ' rdtToday';
 		}
 
@@ -147,14 +161,32 @@ function getRow( rows, day ) {
  * @return {array} A list with the shortname of the days
  */
 function getDaysOfWeek() {
-	// Default to English weekdays if locale data is not available
-	const weekdaysMin = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-	const first = 0; // Sunday as first day (default)
+	// Use Day.js locale data if available, otherwise default to English
+	let weekdaysMin;
+	let firstDayOfWeek = 0; // Default to Sunday
+
+	try {
+		const localeData = dayjs().locale();
+		if (localeData && localeData.weekdaysMin) {
+			weekdaysMin = localeData.weekdaysMin;
+			if (localeData.weekStart !== undefined) {
+				firstDayOfWeek = localeData.weekStart;
+			}
+		}
+	} catch (e) {
+		// Fallback to default if locale data not available
+	}
+
+	// Fallback to English if no locale data found
+	if (!weekdaysMin) {
+		weekdaysMin = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+	}
+
 	let dow = [];
 	let i = 0;
 
 	weekdaysMin.forEach(function (day) {
-		dow[(7 + (i++) - first) % 7] = day;
+		dow[(7 + (i++) - firstDayOfWeek) % 7] = day;
 	});
 
 	return dow;
