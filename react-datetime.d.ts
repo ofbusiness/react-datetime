@@ -6,26 +6,25 @@
 // These are the typings for Typescript 1.8
 // for Typescript 2.0+ see DateTime.d.ts
 
-//// <reference path="../moment/moment-node.d.ts" />
 
 declare module ReactDatetime {
   import React = __React;
-  // import * as moment from 'moment';
+  // import * as dayjs from 'dayjs';
 
   export interface DatetimepickerProps {
     /*
      Represents the selected date by the component, in order to use it as a controlled component.
-     This prop is parsed by moment.js, so it is possible to use a date string or a moment.js date.
+     This prop is parsed by Day.js, so it is possible to use a date string or a dayjs date.
      */
     value?: Date;
     /*
      Represents the selected date for the component to use it as a uncontrolled component.
-     This prop is parsed by moment.js, so it is possible to use a date string or a moment.js date.
+     This prop is parsed by Day.js, so it is possible to use a date string or a dayjs date.
      */
     initialValue?: Date;
     /*
      Define the month/year/decade/time which is viewed on opening the calendar.
-     This prop is parsed by Moment.js, so it is possible to use a date `string` or a `moment` object.
+     This prop is parsed by Day.js, so it is possible to use a date `string` or a `dayjs` object.
      */
     initialViewDate?: Date;
     /*
@@ -43,13 +42,13 @@ declare module ReactDatetime {
     */
     updateOnView?: string;
     /*
-     Defines the format for the date. It accepts any moment.js date format.
+     Defines the format for the date. It accepts any Day.js date format.
      If true the date will be displayed using the defaults for the current locale.
      If false the datepicker is disabled and the component can be used as timepicker.
      */
     dateFormat?: boolean|string;
     /*
-     Defines the format for the time. It accepts any moment.js time format.
+     Defines the format for the time. It accepts any Day.js time format.
      If true the time will be displayed using the defaults for the current locale.
      If false the timepicker is disabled and the component can be used as datepicker.
      */
@@ -65,35 +64,26 @@ declare module ReactDatetime {
     open?: boolean;
     /*
      Manually set the locale for the react-datetime instance.
-     Moment.js locale needs to be loaded to be used, see i18n docs.
+     Day.js locale needs to be loaded to be used, see i18n docs.
      */
     locale?: string;
-    /*
-     Whether to interpret input times as UTC or the user's local timezone.
-     */
-    utc?: boolean;
-    /*
-     When specified, input time values will be displayed in the given time zone. Otherwise they will default
-     to the user's local timezone (unless `utc` specified).
-     */
-    displayTimeZone?: string;
-    /*
-     Callback trigger when the date changes. The callback receives the selected `moment` object as
+        /*
+     Callback trigger when the date changes. The callback receives the selected `dayjs` object as
      only parameter, if the date in the input is valid. If the date in the input is not valid, the
      callback receives the value of the input (a string).
      */
-    onChange?: (momentOrInputString: string|any) => void;
+    onChange?: (dayjsOrInputString: string|any) => void;
     /*
      Callback trigger for when the user opens the datepicker.
      */
     onOpen?: () => void;
     /*
      Callback trigger for when the datepicker is closed.
-     The callback receives the selected `moment` object as only parameter, if the date in the input
+     The callback receives the selected `dayjs` object as only parameter, if the date in the input
      is valid. If the date in the input is not valid, the callback receives the value of the
      input (a string).
      */
-    onClose?: (momentOrInputString : string|any) => void;
+    onClose?: (dayjsOrInputString : string|any) => void;
     /*
      Callback trigger when the view mode changes. The callback receives the selected view mode
      string ('years', 'months', 'days', 'time') as only parameter.
@@ -164,7 +154,7 @@ declare module ReactDatetime {
      */
     renderYear?: (props: any, year: number, selectedDate: any) => React.Component<any, any>;
     /*
-     Whether to use moment's strict parsing when parsing input.
+     Whether to use Day.js strict parsing when parsing input.
      */
     strictParsing?: boolean;
     /*
