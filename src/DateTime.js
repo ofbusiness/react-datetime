@@ -273,22 +273,20 @@ export default class Datetime extends React.Component {
 
 	getLocaleData() {
 		let p = this.props;
-		return this.localMoment( p.value || p.defaultValue || new Date() ).localeData();
+		return this.localMoment( p.value || p.defaultValue || new Date() );
 	}
 
 	getDateFormat() {
-		const locale = this.getLocaleData();
 		let format = this.props.dateFormat;
-		if ( format === true ) return locale.longDateFormat('L');
+		if ( format === true ) return 'L';
 		if ( format ) return format;
 		return '';
 	}
 
 	getTimeFormat() {
-		const locale = this.getLocaleData();
 		let format = this.props.timeFormat;
 		if ( format === true ) {
-			return locale.longDateFormat('LT');
+			return 'LT';
 		}
 		return format || '';
 	}

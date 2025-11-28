@@ -147,9 +147,9 @@ function getRow( rows, day ) {
  * @return {array} A list with the shortname of the days
  */
 function getDaysOfWeek() {
-	const localeData = dayjs().$locale();
-	const first = localeData.weekStart || 0;
-	const weekdaysMin = dayjs.weekdaysMin();
+	// Default to English weekdays if locale data is not available
+	const weekdaysMin = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+	const first = 0; // Sunday as first day (default)
 	let dow = [];
 	let i = 0;
 
