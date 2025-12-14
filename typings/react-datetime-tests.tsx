@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Moment } from "moment";
-import * as moment from "moment";
+import * as dayjs from "dayjs";
+import { Dayjs } from "dayjs";
 import * as ReactDatetime from "react-datetime";
 
 /*
@@ -22,7 +22,7 @@ const TEST_DATE_PROPS_FOR_DEFAULT_VALUE: JSX.Element = <ReactDatetime
 	/>;
 
 const TEST_DATE_PROPS_FOR_VALUE_AS_MOMENT: JSX.Element = <ReactDatetime
-		value={ moment() }
+		value={ dayjs() }
 	/>;
 
 const TEST_DATE_PROPS_FOR_VALUE_AS_STRING: JSX.Element = <ReactDatetime
@@ -30,7 +30,7 @@ const TEST_DATE_PROPS_FOR_VALUE_AS_STRING: JSX.Element = <ReactDatetime
 	/>;
 
 const TEST_DATE_PROPS_FOR_DEFAULT_VALUE_AS_MOMENT: JSX.Element = <ReactDatetime
-		initialValue={ moment() }
+		initialValue={ dayjs() }
 	/>;
 
 const TEST_DATE_PROPS_FOR_DEFAULT_VALUE_AS_STRING: JSX.Element = <ReactDatetime
@@ -61,7 +61,6 @@ const TEST_BOOLEAN_PROPS: JSX.Element = <ReactDatetime
 		strictParsing={ false }
 		closeOnSelect={ false }
 		closeOnClickOutside={ false }
-		utc={ false }
 	/>;
 
 /*
@@ -108,10 +107,10 @@ const TEST_INPUT_PROPS: JSX.Element = <ReactDatetime
 
 const TEST_EVENT_HANDLERS_WITH_MOMENT: JSX.Element = <ReactDatetime
 		onChange={
-			(momentOrInputString:Moment) => {}
+			(momentOrInputString:Dayjs) => {}
 		}
 		onClose={
-			(momentOrInputString:Moment) => {}
+			(momentOrInputString:Dayjs) => {}
 		}
 	/>;
 

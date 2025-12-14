@@ -23,7 +23,7 @@ yarn add react-datetime
 
 ## Usage
 
-[React.js](http://facebook.github.io/react/) and [Moment.js](http://momentjs.com/) are peer dependencies for react-datetime (as well as [Moment.js timezones](https://momentjs.com/timezone/) if you want to use the `displayTimeZone` prop). These dependencies are not installed along with react-datetime automatically, but your project needs to have them installed in order to make the datepicker work. You can then use the datepicker like in the example below.
+[React.js](http://facebook.github.io/react/) and [Day.js](https://github.com/iamkun/dayjs) are peer dependencies for react-datetime. These dependencies are not installed along with react-datetime automatically, but your project needs to have them installed in order to make the datepicker work. You can then use the datepicker like in the example below.
 
 ```js
 // Import the library
@@ -48,21 +48,19 @@ Below we have all the props that we can use with the `<DateTime>` component. The
 
 | Name         | Type    | Default | Description |
 | ------------ | ------- | ------- | ----------- |
-| **value** | `Date` | `new Date()` | Represents the selected date by the component, in order to use it as a [controlled component](https://facebook.github.io/react/docs/forms.html#controlled-components). This prop is parsed by Moment.js, so it is possible to use a date `string` or a `moment` object. |
-| **initialValue** | `Date` | `new Date()` | Represents the selected date for the component to use it as a [uncontrolled component](https://facebook.github.io/react/docs/uncontrolled-components.html). This prop is parsed by Moment.js, so it is possible to use a date `string` or a `moment` object. If you need to set the selected date programmatically after the picker is initialized, please use the `value` prop instead. |
-| **initialViewDate** | `Date` | `new Date()` | Define the month/year/decade/time which is viewed on opening the calendar. This prop is parsed by Moment.js, so it is possible to use a date `string` or a `moment` object. If you want to set the view date after the component has been initialize [see the imperative API](#imperative-api). |
+| **value** | `Date` | `new Date()` | Represents the selected date by the component, in order to use it as a [controlled component](https://facebook.github.io/react/docs/forms.html#controlled-components). This prop is parsed by Day.js, so it is possible to use a date `string` or a `dayjs` object. |
+| **initialValue** | `Date` | `new Date()` | Represents the selected date for the component to use it as a [uncontrolled component](https://facebook.github.io/react/docs/uncontrolled-components.html). This prop is parsed by Day.js, so it is possible to use a date `string` or a `dayjs` object. If you need to set the selected date programmatically after the picker is initialized, please use the `value` prop instead. |
+| **initialViewDate** | `Date` | `new Date()` | Define the month/year/decade/time which is viewed on opening the calendar. This prop is parsed by Day.js, so it is possible to use a date `string` or a `dayjs` object. If you want to set the view date after the component has been initialize [see the imperative API](#imperative-api). |
 | **initialViewMode** | `string` or `number` | `'days'` | The default view to display when the picker is shown for the first time (`'years'`, `'months'`, `'days'`, `'time'`). If you want to set the view mode after the component has been initialize [see the imperative API](#imperative-api). |
 | **updateOnView** | `string` | Intelligent guess | By default we can navigate through years and months without actualling updating the selected date. Only when we get to one view called the "updating view", we make a selection there and the value gets updated, triggering an `onChange` event. By default the updating view will get guessed by using the `dateFormat` so if our dates only show months and never days, the update is done in the `months` view. If we set `updateOnView="time"` selecting a day will navigate to the time view. The time view always updates the selected date, never navigates. If `closeOnSelect={ true }`, making a selection in the view defined by `updateOnView` will close the calendar. |
-| **dateFormat**   | `boolean` or `string`  | `true` | Defines the format for the date. It accepts any [Moment.js date format](http://momentjs.com/docs/#/displaying/format/) (not in localized format). If `true` the date will be displayed using the defaults for the current locale. If `false` the datepicker is disabled and the component can be used as timepicker, see [available units docs](#specify-available-units). |
-| **timeFormat**   | `boolean` or `string`  | `true` | Defines the format for the time. It accepts any [Moment.js time format](http://momentjs.com/docs/#/displaying/format/) (not in localized format). If `true` the time will be displayed using the defaults for the current locale. If `false` the timepicker is disabled and the component can be used as datepicker, see [available units docs](#specify-available-units). |
+| **dateFormat**   | `boolean` or `string`  | `true` | Defines the format for the date. It accepts any [Day.js date format](https://day.js.org/docs/en/display/format) (not in localized format). If `true` the date will be displayed using the defaults for the current locale. If `false` the datepicker is disabled and the component can be used as timepicker, see [available units docs](#specify-available-units). |
+| **timeFormat**   | `boolean` or `string`  | `true` | Defines the format for the time. It accepts any [Day.js time format](https://day.js.org/docs/en/display/format) (not in localized format). If `true` the time will be displayed using the defaults for the current locale. If `false` the timepicker is disabled and the component can be used as datepicker, see [available units docs](#specify-available-units). |
 | **input** | `boolean` | `true` | Whether to show an input field to edit the date manually. |
 | **open** | `boolean` | `null` | Whether to open or close the picker. If not set react-datetime will open the datepicker on input focus and close it on click outside. |
-| **locale** | `string` | `null` | Manually set the locale for the react-datetime instance. Moment.js locale needs to be loaded to be used, see [i18n docs](#i18n).
-| **utc** | `boolean` | `false` | When true, input time values will be interpreted as UTC (Zulu time) by Moment.js. Otherwise they will default to the user's local timezone.
-| **displayTimeZone** | `string` | `null` | **Needs [moment's timezone](https://momentjs.com/timezone/) available in your project.** When specified, input time values will be displayed in the given time zone. Otherwise they will default to the user's local timezone (unless `utc` specified).
-| **onChange** | `function` | empty function | Callback trigger when the date changes. The callback receives the selected `moment` object as only parameter, if the date in the input is valid. If the date in the input is not valid, the callback receives the value of the input (a string). |
+| **locale** | `string` | `null` | Manually set the locale for the react-datetime instance. Day.js locale needs to be loaded to be used, see [i18n docs](#i18n).
+| **onChange** | `function` | empty function | Callback trigger when the date changes. The callback receives the selected `dayjs` object as only parameter, if the date in the input is valid. If the date in the input is not valid, the callback receives the value of the input (a string). |
 | **onOpen** | `function` | empty function | Callback trigger for when the user opens the datepicker. |
-| **onClose** | `function` | empty function | Callback trigger for when the calendar get closed. The callback receives the selected `moment` object as only parameter, if the date in the input is valid. If the date in the input is not valid, the callback returns the value in the input. |
+| **onClose** | `function` | empty function | Callback trigger for when the calendar get closed. The callback receives the selected `dayjs` object as only parameter, if the date in the input is valid. If the date in the input is not valid, the callback returns the value in the input. |
 | **onNavigate** | `function` | empty function | Callback trigger when the view mode changes. The callback receives the selected view mode string (`years`, `months`, `days` or `time`) as only parameter.|
 | **onBeforeNavigate** | `function` | ( nextView, currentView, viewDate ) => nextView | Allows to intercept a change of the calendar view. The accepted function receives the view that it's supposed to navigate to, the view that is showing currently and the date currently shown in the view. Return a viewMode ( default ones are `years`, `months`, `days` or `time`) to navigate to it. If the function returns a "falsy" value, the navigation is stopped and we will remain in the current view. |
 | **onNavigateBack** | `function` | empty function | Callback trigger when the user navigates to the previous month, year or decade. The callback receives the amount and type ('month', 'year') as parameters. |
@@ -75,7 +73,7 @@ Below we have all the props that we can use with the `<DateTime>` component. The
 | **renderDay** | `function` | `DOM.td(day)` | Customize the way that the days are shown in the daypicker. The accepted function has the `selectedDate`, the current date and the default calculated `props` for the cell, and must return a React component. See [Customize the Datepicker Appearance](#customize-the-datepicker-appearance). |
 | **renderMonth** | `function` | `DOM.td(month)` | Customize the way that the months are shown in the monthpicker. The accepted function has the `selectedDate`, the current date and the default calculated `props` for the cell, the `month` and the `year` to be shown, and must return a React component. See [Customize the Datepicker Appearance](#customize-the-datepicker-appearance). |
 | **renderYear** | `function` | `DOM.td(year)` | Customize the way that the years are shown in the year picker. The accepted function has the `selectedDate`, the current date and the default calculated `props` for the cell, the `year` to be shown, and must return a React component. See [Customize the Datepicker Appearance](#customize-the-datepicker-appearance). |
-| **strictParsing** | `boolean` | `true` | Whether to use Moment.js's [strict parsing](http://momentjs.com/docs/#/parsing/string-format/) when parsing input.
+| **strictParsing** | `boolean` | `true` | Whether to use Day.js's [strict parsing](https://day.js.org/docs/en/parse/string-format) when parsing input.
 | **closeOnSelect** | `boolean` | `false` | When `true`, once the day has been selected, the datepicker will be automatically closed.
 | **closeOnTab** | `boolean` | `true` | When `true` and the input is focused, pressing the `tab` key will close the datepicker.
 | **timeConstraints** | `object` | `null` | Add some constraints to the timepicker. It accepts an `object` with the format `{ hours: { min: 9, max: 15, step: 2 }}`, this example means the hours can't be lower than `9` and higher than `15`, and it will change adding or subtracting `2` hours everytime the buttons are clicked. The constraints can be added to the `hours`, `minutes`, `seconds` and `milliseconds`.
@@ -96,16 +94,16 @@ this.refs.datetime.navigate('years')
 
 Available methods are:
 * **navigate( viewMode )**: Set the view currently shown by the calendar. View modes shipped with react-datetime are `years`, `months`, `days` and `time`, but you can alse navigate to custom modes that can be defined by using the `renderView` prop.
-* **setViewDate( date )**: Set the date that is currently shown in the calendar. This is independent from the selected date and it's the one used to navigate through months or days in the calendar. It accepts a string in the format of the current locale, a `Date` or a `Moment` object as parameter.
+* **setViewDate( date )**: Set the date that is currently shown in the calendar. This is independent from the selected date and it's the one used to navigate through months or days in the calendar. It accepts a string in the format of the current locale, a `Date` or a `Dayjs` object as parameter.
 
 ## i18n
-Different language and date formats are supported by react-datetime. React uses [Moment.js](http://momentjs.com/) to format the dates, and the easiest way of changing the language of the calendar is [changing the Moment.js locale](http://momentjs.com/docs/#/i18n/changing-locale/).
+Different language and date formats are supported by react-datetime. React uses [Day.js](https://github.com/iamkun/dayjs) to format the dates, and the easiest way of changing the language of the calendar is [changing the Day.js locale](https://day.js.org/docs/en/i18n/loading-locale).
 
-Don't forget to import your locale file from the moment's `moment/locale` folder.
+Don't forget to import your locale file from the dayjs `dayjs/locale` folder.
 
 ```js
-import moment from 'moment';
-import 'moment/locale/fr';
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
 // Now react-datetime will be in french
 ```
 
@@ -233,7 +231,7 @@ class MyDTPicker extends React.Component {
 
 #### Method Parameters
 * `props` is the object that the datepicker has calculated for this object. It is convenient to use this object as the `props` for your custom component, since it knows how to handle the click event and its `className` attribute is used by the default styles.
-* `selectedDate` and `currentDate` are [moment objects](http://momentjs.com) and can be used to change the output depending on the selected date, or the date for the current day.
+* `selectedDate` and `currentDate` are [dayjs objects](https://day.js.org/docs/en/en/getting-started) and can be used to change the output depending on the selected date, or the date for the current day.
 * `month` and `year` are the numeric representation of the current month and year to be displayed. Notice that the possible `month` values range from `0` to `11`.
 
 ## Make it work as a year picker or a time picker
@@ -252,13 +250,13 @@ In this example you can *only select a year and month*.
 [Working example of only selecting year and month here.](https://codesandbox.io/s/recursing-pascal-xl643)
 
 ## Blocking some dates to be selected
-It is possible to disable dates in the calendar if the user are not allowed to select them, e.g. dates in the past. This is done using the prop `isValidDate`, which admits a function in the form `function(currentDate, selectedDate)` where both arguments are [moment objects](http://momentjs.com). The function shall return `true` for selectable dates, and `false` for disabled ones.
+It is possible to disable dates in the calendar if the user are not allowed to select them, e.g. dates in the past. This is done using the prop `isValidDate`, which admits a function in the form `function(currentDate, selectedDate)` where both arguments are [dayjs objects](https://day.js.org/docs/en/en/getting-started). The function shall return `true` for selectable dates, and `false` for disabled ones.
 
 In the example below are *all dates before today* disabled.
 
 ```js
-import moment from 'moment';
-var yesterday = moment().subtract( 1, 'day' );
+import dayjs from 'dayjs';
+var yesterday = dayjs().subtract( 1, 'day' );
 var valid = function( current ){
     return current.isAfter( yesterday );
 };

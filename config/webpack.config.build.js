@@ -14,8 +14,7 @@ const baseConfig = {
 	externals: {
 		'react': 'react',
 		'react-dom': 'react-dom',
-		'moment': 'moment',
-		'moment-timezone': 'moment-timezone'
+		'dayjs': 'dayjs'
 	},
 
 	module: {
